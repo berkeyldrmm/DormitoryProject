@@ -1,4 +1,6 @@
-﻿using Entities.Concrete;
+﻿using DTOs.AuthenticationDTOs;
+using Entities.Concrete;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +11,7 @@ namespace Services.Abstract
 {
     public interface IUserService : IGenericService<AppUser>
     {
-
+        public IEnumerable<AppUser> GetStudents();
+        public Task<bool> CreateStudent(UserDTO userDto);
     }
 }

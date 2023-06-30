@@ -14,58 +14,57 @@ namespace DormitoryProjectAPI.Controllers
     {
         private readonly IUserService _userService;
         private readonly UserManager<AppUser> _userManager;
-        private readonly IMapper _mapper;
         public UserController(IUserService userService, UserManager<AppUser> userManager, IMapper mapper)
         {
             _userService = userService;
             _userManager = userManager;
-            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task <IActionResult> GetStudents()
+        public IActionResult GetStudents()
         {
-            var users = _userService.GetAll();
-            var students = new List<AppUser>();
-            foreach (var user in users)
+            try
             {
-                var result=await _userManager.IsInRoleAsync(user, "Öğrenci");
-                if (result)
-                {
-                    students.Add(user);
-                }
+                var students = _userService.GetStudents();
+                return Ok(students);
             }
-            return Ok(students);
+            catch (Exception)
+            {
+                throw new Exception("Bir hata oluştu.");
+            }
         }
 
         [HttpGet("id")]
         public IActionResult GetStudentById(int id)
         {
-            var user = _userService.GetOne(id);
-            return Ok(user);
+            try
+            {
+                var user = _userService.GetOne(id);
+                if(user is null)
+                {
+                    return BadRequest();
+                }
+                return Ok(user);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Bir hata oluştu.");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> AddStudent(UserDTO userDto)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                AppUser user = _mapper.Map<AppUser>(userDto);
-                user.UserName = userDto.Email;
-                user.Date= DateTime.Now;
-                user.PermissionRights = 60;
-                var result = await _userManager.CreateAsync(user, userDto.Password);
-                if (result.Succeeded)
+                var result = await _userService.CreateStudent(userDto);
+                if (result)
                 {
-                    var result2=await _userManager.AddToRoleAsync(user, "Öğrenci");
-                    if (result2.Succeeded)
-                    {
-                        return Ok(user);
-                    }
+                    return Ok();
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Bir hata meydana geldi.");
+                    throw new Exception("Bir hata oluştu.");
                 }
             }
             return BadRequest();
@@ -82,15 +81,34 @@ namespace DormitoryProjectAPI.Controllers
             return BadRequest();
         }
 
+        //[HttpDelete]
+        //public IActionResult DeleteStudent(AppUser user)
+        //{
+        //    var result = _userService.Delete(user);
+        //    if (result)
+        //    {
+        //        return NoContent();
+        //    }
+        //    return BadRequest();
+        //}
+
         [HttpDelete]
-        public IActionResult DeleteStudent(AppUser user)
+        public async Task<IActionResult> DeleteStudentByIdAsync(int id)
         {
-            var result = _userService.Delete(user);
-            if (result)
+            try
             {
-                return NoContent();
+                var user = await _userService.GetOne(id);
+                var result = _userService.Delete(user);
+                if (result)
+                {
+                    return NoContent();
+                }
+                return BadRequest();
             }
-            return BadRequest();
+            catch (Exception)
+            {
+                throw new Exception("Bir hata oluştu.");
+            }
         }
     }
 }

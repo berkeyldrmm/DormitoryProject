@@ -32,7 +32,7 @@ namespace DormitoryProjectAPI.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı.");
+                    throw new Exception("Kullanıcı adı veya şifre hatalı.");
                 }
             }
             return BadRequest();
