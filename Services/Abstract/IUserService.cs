@@ -11,6 +11,7 @@ namespace Services.Abstract
 {
     public interface IUserService : IGenericService<AppUser>
     {
+        public Task<bool> DeleteUserAsync(AppUser entity);
         public IEnumerable<AppUser> GetStudents();
         public Task<bool> CreateStudent(UserDTO userDto);
     }

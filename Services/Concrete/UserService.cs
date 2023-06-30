@@ -16,15 +16,17 @@ using System.Threading.Tasks;
 
 namespace Services.Concrete
 {
-    public class UserService : UserManager<AppUser> , IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly UserManager<AppUser> _userManager;
 
-        public UserService(IUserStore<AppUser> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<AppUser> passwordHasher, IEnumerable<IUserValidator<AppUser>> userValidators, IEnumerable<IPasswordValidator<AppUser>> passwordValidators, ILookupNormalizer keyNormalizer, IdentityErrorDescriber errors, IServiceProvider services, ILogger<UserManager<AppUser>> logger, IUserRepository userRepository, IMapper mapper) : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
+        public UserService(IUserRepository userRepository, IMapper mapper, UserManager<AppUser> userManager)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         public async Task<bool> Create(AppUser entity)
@@ -43,19 +45,25 @@ namespace Services.Concrete
             user.UserName = userDto.Email;
             user.Date = DateTime.Now;
             user.PermissionRights = 60;
-            var result = await CreateAsync(user, userDto.Password);
+            var result = await _userManager.CreateAsync(user, userDto.Password);
             if (result.Succeeded)
             {
-                var result2 = await AddToRoleAsync(user, "Öğrenci");
+                var result2 = await _userManager.AddToRoleAsync(user, "Ogrenci");
                 return result2.Succeeded;
             }
             return false;
         }
 
-        public async Task<bool> Delete(AppUser entity)
+        public async Task<bool> DeleteUserAsync(AppUser entity)
         {
-            var result=await DeleteAsync(entity);
+            var result = await _userManager.DeleteAsync(entity);
             return result.Succeeded;
+        }
+
+        public bool Delete(AppUser entity)
+        {
+            
+            throw new NotImplementedException();
         }
 
         public void DeleteRange(IEnumerable<AppUser> entity)
@@ -75,7 +83,7 @@ namespace Services.Concrete
 
         public async Task<AppUser> GetOne(int id)
         {
-            return await _userRepository.GetOneById(id);
+            return await _userManager.FindByIdAsync(id.ToString());
         }
 
         public IEnumerable<AppUser> GetStudents()
@@ -92,5 +100,7 @@ namespace Services.Concrete
         {
             _userRepository.UpdateRange(entity);
         }
+
+        
     }
 }

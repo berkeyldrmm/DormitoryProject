@@ -19,7 +19,7 @@ namespace DataAccess.Repositories
             var students = (from users in Entity
                             join userroles in _context.UserRoles on users.Id equals userroles.UserId
                             join roles in _context.Roles on userroles.RoleId equals roles.Id
-                            where roles.Name=="Öğrenci"
+                            where roles.Name=="Ogrenci"
                             select users).AsQueryable();
             return students;
         }

@@ -11,7 +11,8 @@ namespace Services.Abstract
 {
     public interface IAuthenticationService
     {
-        Task<SignInResult> LoginAsync(LoginDTO loginDTO);
+        Task<bool> LoginAsync(LoginDTO loginDTO, string role);
+        public Task LogoutAsync();
         TokenDTO CreateToken(IConfiguration _configuration, int minute);
     }
 }

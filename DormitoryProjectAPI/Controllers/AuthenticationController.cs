@@ -20,12 +20,12 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDTO loginDTO)
+        public async Task<IActionResult> Login(LoginDTO loginDTO, string role)
         {
             if(ModelState.IsValid)
             {
-                var result = await _authenticationService.LoginAsync(loginDTO);
-                if (result.Succeeded)
+                var result = await _authenticationService.LoginAsync(loginDTO, role);
+                if (result)
                 {
                     TokenDTO token=_authenticationService.CreateToken(_configuration, 10);
                     return Ok(token);
@@ -36,6 +36,21 @@ namespace DormitoryProjectAPI.Controllers
                 }
             }
             return BadRequest();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                await _authenticationService.LogoutAsync();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                throw new Exception("Bilinmeyen bir hata oluştu.");
+            }
+            
         }
     }
 }

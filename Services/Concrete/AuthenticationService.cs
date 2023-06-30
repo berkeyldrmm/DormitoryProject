@@ -16,9 +16,11 @@ namespace Services.Concrete
     public class AuthenticationService : IAuthenticationService
     {
         private readonly SignInManager<AppUser> _signInManager;
-        public AuthenticationService(SignInManager<AppUser> signInManager)
+        private readonly UserManager<AppUser> _userManager;
+        public AuthenticationService(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         public TokenDTO CreateToken(IConfiguration _configuration, int minute)
@@ -44,10 +46,19 @@ namespace Services.Concrete
             return token;
         }
 
-        public async Task<SignInResult> LoginAsync(LoginDTO loginDTO)
+        public async Task<bool> LoginAsync(LoginDTO loginDTO, string role)
         {
-            var result = await _signInManager.PasswordSignInAsync(loginDTO.Username, loginDTO.Password, false, true);
-            return result;
+            var user=await _userManager.FindByNameAsync(loginDTO.Username);
+            if(await _userManager.IsInRoleAsync(user, role))
+            {
+                var result = await _signInManager.PasswordSignInAsync(loginDTO.Username, loginDTO.Password, false, true);
+                return result.Succeeded;
+            }
+            return false;
+        }
+        public async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
         }
     }
 }

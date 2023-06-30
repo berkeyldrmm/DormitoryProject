@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DTOs.AuthenticationDTOs;
 using Entities.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ namespace DormitoryProjectAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -35,11 +37,11 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpGet("id")]
-        public IActionResult GetStudentById(int id)
+        public async Task<IActionResult> GetStudentByIdAsync(int id)
         {
             try
             {
-                var user = _userService.GetOne(id);
+                var user = await _userService.GetOne(id);
                 if(user is null)
                 {
                     return BadRequest();
@@ -81,24 +83,13 @@ namespace DormitoryProjectAPI.Controllers
             return BadRequest();
         }
 
-        //[HttpDelete]
-        //public IActionResult DeleteStudent(AppUser user)
-        //{
-        //    var result = _userService.Delete(user);
-        //    if (result)
-        //    {
-        //        return NoContent();
-        //    }
-        //    return BadRequest();
-        //}
-
         [HttpDelete]
         public async Task<IActionResult> DeleteStudentByIdAsync(int id)
         {
             try
             {
                 var user = await _userService.GetOne(id);
-                var result = _userService.Delete(user);
+                var result = await _userService.DeleteUserAsync(user);
                 if (result)
                 {
                     return NoContent();
