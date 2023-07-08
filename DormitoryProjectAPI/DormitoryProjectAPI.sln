@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DormitoryProjectAPI", "DormitoryProjectAPI.csproj", "{2DA5228E-0BE5-48E7-8EED-AE1FCB8053E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DormitoryProjectAPI", "DormitoryProjectAPI.csproj", "{2DA5228E-0BE5-48E7-8EED-AE1FCB8053E5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "..\Services\Services.csproj", "{3CC9F499-8D49-4306-9605-ABB5414C5548}"
 EndProject

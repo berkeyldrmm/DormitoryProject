@@ -49,7 +49,7 @@ namespace DormitoryProjectAPI.Controllers
                 }
                 return Ok(user);
             }
-            catch (Exception err)
+            catch (Exception)
             {
                 throw new Exception("Bir hata oluştu.");
             }

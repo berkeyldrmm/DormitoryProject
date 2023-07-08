@@ -32,7 +32,6 @@ namespace DormitoryProjectAPI.Controllers
 
         [Route("students/{id}")]
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult GetRoomWithStudents(int id)
         {
             var rooms=_roomService.GetOneWithStudents(id);

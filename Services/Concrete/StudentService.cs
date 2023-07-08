@@ -78,14 +78,30 @@ namespace Services.Concrete
             await _userManager.UpdateAsync(user);
         }
 
-        public IEnumerable<AppUser> GetStudentsWithEvents()
+        public IEnumerable<AppUser> GetStudentsWithSuggestions()
         {
-            return _userRepository.GetUsersWithEvents().ToList();
+            return _userRepository.GetUsersWithSuggestions().ToList();
         }
-        public IEnumerable<AppUser> GetStudentWithEvents(int id)
+        public IEnumerable<AppUser> GetStudentWithSuggestions(int id)
         {
-            _userManager.FindByIdAsync(id.ToString());
-            return _userRepository.GetUsersWithEvents().Where(s=>s.Id==id).ToList();
+            return _userRepository.GetUsersWithSuggestions().Where(s=>s.Id==id).ToList();
+        }
+        public async Task<bool> AddPermissionsToStudentAsync(Permission permission)
+        {
+            var student=await _userManager.FindByIdAsync(permission.StudentId.ToString());
+            if(student is null)
+            {
+                throw new DirectoryNotFoundException("Öğrenci bulunamadı.");
+            }
+            student.Permissions.Add(permission);
+            TimeSpan span= permission.DateOfEnd.Subtract(permission.DateOfStart);
+            if (student.PermissionRights > span.Days)
+            {
+                student.PermissionRights -= span.Days;
+                var result=await _userManager.UpdateAsync(student);
+                return result.Succeeded;
+            }
+            throw new Exception("Yeteri kadar izin hakkınız bulunmamaktadır.");
         }
     }
 }

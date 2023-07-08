@@ -2,6 +2,7 @@
 using Entities.Concrete;
 using IdentityProject.Models;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
@@ -10,15 +11,18 @@ namespace DormitoryProjectAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MailConfirmController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IConfiguration _configuration;
 
-        public MailConfirmController(UserManager<AppUser> userManager, IUnitOfWork unitOfWork)
+        public MailConfirmController(UserManager<AppUser> userManager, IUnitOfWork unitOfWork, IConfiguration configuration)
         {
             _userManager = userManager;
             _unitOfWork = unitOfWork;
+            _configuration = configuration;
         }
 
         [Route("sendconfirmcode")]
@@ -35,7 +39,7 @@ namespace DormitoryProjectAPI.Controllers
                 int code = random.Next(100000, 1000000);
                 user.ConfirmCode = code;
                 using MimeMessage mimeMessage = new MimeMessage();
-                MailboxAddress mailboxAddressFrom = new MailboxAddress("Admin", "berke.yildirimm44@gmail.com");
+                MailboxAddress mailboxAddressFrom = new MailboxAddress("DormitoryApp", "berke.yildirimm44@gmail.com");
                 MailboxAddress mailboxAddressTo = new MailboxAddress("User", user.Email);
                 mimeMessage.From.Add(mailboxAddressFrom);
                 mimeMessage.To.Add(mailboxAddressTo);
@@ -47,7 +51,7 @@ namespace DormitoryProjectAPI.Controllers
 
                 using SmtpClient client = new SmtpClient();
                 client.Connect("smtp.gmail.com", 587, false);
-                client.Authenticate("berke.yildirimm44@gmail.com", "rcertnrinytvjzxc");
+                client.Authenticate(_configuration["Mail:EmailAddress"], _configuration["Mail:ApplicationCode"]);
                 client.Send(mimeMessage);
                 client.Disconnect(true);
                 return Ok();
@@ -77,7 +81,6 @@ namespace DormitoryProjectAPI.Controllers
             {
                 throw new Exception("Bir hata oluştu.");
             }
-            
         }
     }
 }

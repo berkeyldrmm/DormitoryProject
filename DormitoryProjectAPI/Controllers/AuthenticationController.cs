@@ -60,6 +60,7 @@ namespace DormitoryProjectAPI.Controllers
         }
         [Route("changepassword")]
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO)
         {
             if (HttpContext.Request.Headers.TryGetValue("Authorization", out var token))

@@ -17,7 +17,8 @@ namespace Services.Abstract
         public Task<bool> CreateStudent(StudentDTO userDto);
         public AppUser UpdateUser(AppUser student, StudentUpdateDTO studentDTO);
         public Task AddSuggestionsToStudentAsync(Suggestion_Complaint suggestion);
-        public IEnumerable<AppUser> GetStudentsWithEvents();
-        public IEnumerable<AppUser> GetStudentWithEvents(int id);
+        public IEnumerable<AppUser> GetStudentsWithSuggestions();
+        public IEnumerable<AppUser> GetStudentWithSuggestions(int id);
+        public Task<bool> AddPermissionsToStudentAsync(Permission permission);
     }
 }

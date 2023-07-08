@@ -21,7 +21,14 @@ namespace Services.Concrete
         }
         public async Task<bool> Create(Permission entity)
         {
-            return await _permissionRepository.AddAsync(entity);
+            if (entity.DateOfEnd > entity.DateOfStart)
+            {
+                return await _permissionRepository.AddAsync(entity);
+            }
+            else
+            {
+                throw new Exception("Bitiş tarihi, başlangıç tarihinden erken olamaz.");
+            }
         }
 
         public async Task CreateRange(IEnumerable<Permission> entity)

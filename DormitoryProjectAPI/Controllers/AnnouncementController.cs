@@ -21,6 +21,7 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult GetAllAnnouncements()
         {
             var announcements = _announcementService.GetAll();
@@ -28,6 +29,7 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> GetOneAnnouncementAsync(int id)
         {
             var announcement = await _announcementService.GetOne(id);
@@ -42,6 +44,7 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> AddAnnouncement(Announcement announcement)
         {
             announcement.Date= DateTime.Now;
@@ -69,6 +72,7 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> UpdateAnnouncementAsync(Announcement announcement)
         {
             announcement.Date= DateTime.Now;
@@ -87,6 +91,7 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> DeleteAnnouncementById(int id)
         {
             try

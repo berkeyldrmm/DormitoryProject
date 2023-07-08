@@ -1,6 +1,7 @@
 ﻿using DataAccess.Abstract;
 using DTOs.Suggestion_ComplaintsDTOs;
 using Entities.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,18 +12,19 @@ namespace DormitoryProjectAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SuggestionsController : ControllerBase
+    public class SuggestionController : ControllerBase
     {
         private readonly ISuggestion_ComplaintService _suggestionService;
         private readonly IStudentService _studentService;
         private readonly IUnitOfWork _unitOfWork;
-        public SuggestionsController(ISuggestion_ComplaintService suggestionService, IStudentService studentService, IUnitOfWork unitOfWork)
+        public SuggestionController(ISuggestion_ComplaintService suggestionService, IStudentService studentService, IUnitOfWork unitOfWork)
         {
             _suggestionService = suggestionService;
             _studentService = studentService;
             _unitOfWork = unitOfWork;
         }
         [HttpGet]
+        [Authorize(Policy = "Admin")]
         public IActionResult GetSuggestions()
         {
             try
@@ -37,6 +39,7 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> GetSuggestionByIdAsync(int id)
         {
             try
@@ -55,6 +58,7 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddSuggestion(Suggestion_Complaint suggestion)
         {
             if (ModelState.IsValid)
@@ -75,6 +79,7 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> UpdateSuggestion(Suggestion_Complaint suggestion)
         {
             suggestion.Date = DateTime.Now;
@@ -93,6 +98,7 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> DeleteSuggestionByIdAsync(int id)
         {
             try

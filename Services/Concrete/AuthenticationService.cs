@@ -43,7 +43,7 @@ namespace Services.Concrete
                 claims:new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, username),
-                    new Claim(role, role)
+                    new Claim(ClaimTypes.Role, role)
                 }
             );
             //Token oluşturucu sınıfından bir örnek oluşturulur.

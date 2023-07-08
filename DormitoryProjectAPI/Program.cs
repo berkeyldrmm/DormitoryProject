@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Services.ValidationRules;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -31,8 +32,8 @@ builder.Services.ConfigureDependencies();
 builder.Services.AddAutoMapper(typeof(UserProfile));
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Admin", policy => policy.RequireClaim("Admin", "Admin"));
-    options.AddPolicy("Student", policy => policy.RequireClaim("Student", "Student"));
+    options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, "Admin"));
+    options.AddPolicy("Student", policy => policy.RequireClaim(ClaimTypes.Role, "Student"));
 });
 
 //builder.Services.AddAuthentication();

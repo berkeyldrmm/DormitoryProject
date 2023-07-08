@@ -44,7 +44,7 @@ namespace DataAccess.Repositories
             
             return linq.AsQueryable();
         }
-        public IQueryable<AppUser> GetUsersWithEvents()
+        public IQueryable<AppUser> GetUsersWithSuggestions()
         {
             return GetUsersByRole("Student").Include(s=>s.Suggestions_Complaints).AsQueryable();
         }

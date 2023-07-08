@@ -14,7 +14,6 @@ namespace DormitoryProjectAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class StudentController : ControllerBase
     {
         private readonly IStudentService _studentService;
@@ -30,6 +29,7 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "Admin")]
         public IActionResult GetStudents()
         {
             try
@@ -44,6 +44,7 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> GetStudentByIdAsync(int id)
         {
             try
@@ -62,6 +63,7 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> AddStudent(StudentDTO userDto)
         {
             try
@@ -112,6 +114,7 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> UpdateStudent(int id, StudentUpdateDTO studentDto)
         {
             try
@@ -168,6 +171,7 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> DeleteStudentByIdAsync(int id)
         {
             try
@@ -200,19 +204,19 @@ namespace DormitoryProjectAPI.Controllers
             }
         }
 
-        [Route("getstudentswithevents")]
+        [Route("getstudentswithsuggestions")]
         [HttpGet]
-        public IActionResult GetStudentsWithEvents()
+        public IActionResult GetStudentsWithSuggestions()
         {
-            var students=_studentService.GetStudentsWithEvents();
+            var students=_studentService.GetStudentsWithSuggestions();
             return Ok(students);
         }
 
-        [Route("getstudentwithevents/{StudentId:int}")]
+        [Route("getstudentwithsuggestions/{StudentId:int}")]
         [HttpGet]
-        public IActionResult GetStudentWithEvents(int StudentId)
+        public IActionResult GetStudentWithSuggestions(int StudentId)
         {
-            var student = _studentService.GetStudentWithEvents(StudentId);
+            var student = _studentService.GetStudentWithSuggestions(StudentId);
             return Ok(student);
         }
     }
