@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DTOs.AuthenticationDTOs;
+using DTOs.UpdateDTOs;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -11,23 +12,23 @@ namespace DormitoryProjectAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
-    public class UserController : ControllerBase
+    [Authorize(Policy = "Admin")]
+    public class AdminController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly IAdminService _adminService;
         private readonly UserManager<AppUser> _userManager;
-        public UserController(IUserService userService, UserManager<AppUser> userManager, IMapper mapper)
+        public AdminController(IAdminService adminService, UserManager<AppUser> userManager)
         {
-            _userService = userService;
+            _adminService = adminService;
             _userManager = userManager;
         }
 
         [HttpGet]
-        public IActionResult GetStudents()
+        public IActionResult GetAdminsAsync()
         {
             try
             {
-                var students = _userService.GetStudents();
+                var students = _adminService.GetAdmins();
                 return Ok(students);
             }
             catch (Exception)
@@ -36,30 +37,30 @@ namespace DormitoryProjectAPI.Controllers
             }
         }
 
-        [HttpGet("id")]
-        public async Task<IActionResult> GetStudentByIdAsync(int id)
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetAdminByIdAsync(int id)
         {
             try
             {
-                var user = await _userService.GetOne(id);
-                if(user is null)
+                var user = await _userManager.FindByIdAsync(id.ToString());
+                if (user is null || !(await _userManager.IsInRoleAsync(user,"Admin")))
                 {
                     return BadRequest();
                 }
                 return Ok(user);
             }
-            catch (Exception)
+            catch (Exception err)
             {
                 throw new Exception("Bir hata oluştu.");
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddStudent(UserDTO userDto)
+        public async Task<IActionResult> AddAdmin(AdminDTO adminDto)
         {
             if (ModelState.IsValid)
             {
-                var result = await _userService.CreateStudent(userDto);
+                var result = await _adminService.CreateAdmin(adminDto);
                 if (result)
                 {
                     return Ok();
@@ -73,10 +74,12 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateStudent(AppUser user)
+        public async Task<IActionResult> UpdateAdmin(int id, AdminUpdateDTO adminDto)
         {
-            var result=_userService.Update(user);
-            if (result)
+            var admin =await _userManager.FindByIdAsync(id.ToString());
+            var user=_adminService.UpdateUser(admin, adminDto);
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
             {
                 return Ok(user);
             }
@@ -84,15 +87,18 @@ namespace DormitoryProjectAPI.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteStudentByIdAsync(int id)
+        public async Task<IActionResult> DeleteAdminByIdAsync(int id)
         {
             try
             {
-                var user = await _userService.GetOne(id);
-                var result = await _userService.DeleteUserAsync(user);
-                if (result)
+                var user = await _userManager.FindByIdAsync(id.ToString());
+                if ((await _userManager.IsInRoleAsync(user, "Admin")) && user is not null)
                 {
-                    return NoContent();
+                    var result = await _adminService.DeleteUserAsync(user);
+                    if (result)
+                    {
+                        return NoContent();
+                    }
                 }
                 return BadRequest();
             }

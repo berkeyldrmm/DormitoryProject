@@ -4,15 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concrete
+namespace DTOs.Suggestion_ComplaintsDTOs
 {
-    public class Suggestion_Complaint
+    public class Suggestion_ComplaintDTO
     {
-        public int Id { get; set; }
         public string Subject { get; set; }
         public string Message { get; set; }
-        public DateTime Date { get; set; }
         public int StudentId { get; set; }
-        public AppUser? Complainant_Recommender { get; set; }
     }
 }

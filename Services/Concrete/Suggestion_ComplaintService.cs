@@ -1,5 +1,7 @@
-﻿using DataAccess.Abstract;
+﻿using AutoMapper;
+using DataAccess.Abstract;
 using DataAccess.Repositories;
+using DTOs.Suggestion_ComplaintsDTOs;
 using Entities.Concrete;
 using Services.Abstract;
 using System;
@@ -14,12 +16,15 @@ namespace Services.Concrete
     public class Suggestion_ComplaintService : ISuggestion_ComplaintService
     {
         private readonly ISuggestion_ComplaintRepository _suggestionComplaintRepository;
-        public Suggestion_ComplaintService(ISuggestion_ComplaintRepository suggestionComplaintRepository)
+        private readonly IMapper _mapper;
+        public Suggestion_ComplaintService(ISuggestion_ComplaintRepository suggestionComplaintRepository, IMapper mapper)
         {
             _suggestionComplaintRepository = suggestionComplaintRepository;
+            _mapper = mapper;
         }
         public async Task<bool> Create(Suggestion_Complaint entity)
         {
+            entity.Date= DateTime.Now;
             return await _suggestionComplaintRepository.AddAsync(entity);
         }
 
@@ -28,7 +33,7 @@ namespace Services.Concrete
             await _suggestionComplaintRepository.AddRangeAsync(entity);
         }
 
-        public bool Delete(Suggestion_Complaint entity)
+        public bool DeleteAsync(Suggestion_Complaint entity)
         {
             return _suggestionComplaintRepository.Delete(entity);
         }

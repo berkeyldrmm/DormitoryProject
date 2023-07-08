@@ -9,6 +9,7 @@ namespace DataAccess.Abstract
 {
     public interface IUserRepository : IGenericRepository<AppUser>
     {
-        IQueryable<AppUser> GetStudents();
+        IQueryable<AppUser> GetUsersByRole(string role);
+        public IQueryable<AppUser> GetUsersWithEvents();
     }
 }

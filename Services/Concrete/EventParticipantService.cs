@@ -31,7 +31,7 @@ namespace Services.Concrete
             await _eventParticipantRepository.AddRangeAsync(entity);
         }
 
-        public bool Delete(EventParticipant entity)
+        public bool DeleteAsync(EventParticipant entity)
         {
             return _eventParticipantRepository.Delete(entity);
         }

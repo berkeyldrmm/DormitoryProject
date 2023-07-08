@@ -15,7 +15,7 @@ namespace DataAccess.Concrete.EntityConfigurations
         {
             builder.HasOne(sc => sc.Complainant_Recommender)
                 .WithMany(s => s.Suggestions_Complaints)
-                .HasForeignKey(sc=>sc.Suggestion_ComplanintId);
+                .HasForeignKey(sc=>sc.StudentId);
         }
     }
 }

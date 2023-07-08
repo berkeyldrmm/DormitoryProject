@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOs.AuthenticationDTOs
 {
-    public class UserDTO
+    public class StudentDTO
     {
         public string Name { get; set; }
         public string Surname { get; set; }

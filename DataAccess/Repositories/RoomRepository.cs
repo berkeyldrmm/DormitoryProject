@@ -1,6 +1,7 @@
 ﻿using DataAccess.Abstract;
 using DataAccess.Concrete;
 using Entities.Concrete;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,11 @@ namespace DataAccess.Repositories
         public RoomRepository(Context context) : base(context)
         {
         }
+
+        public IQueryable<Room> GetRoomsWithStudents()
+        {
+            return Entity.Include(r => r.Students).AsQueryable();
+        }
+
     }
 }

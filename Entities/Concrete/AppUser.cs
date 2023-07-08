@@ -20,16 +20,17 @@ namespace Entities.Concrete
         public string Surname { get; set; }
         public string? ImageUrl { get; set; }
         public DateTime Date { get; set; }
-        public string ParentName_Surname { get; set; }
-        public string ParentPhoneNumber { get; set; }
-        public ICollection<EventParticipant> Events { get; set; }
-        public ICollection<Permission> Permissions { get; set; }
-        public ICollection<Suggestion_Complaint> Suggestions_Complaints { get; set; }
-        public ICollection<PaymentRecord> PaymentRecords { get; set; }
-        public int RoomId { get; set; }
-        public Room Room { get; set; }
-        public int PermissionRights { get; set; }
-        public string School { get; set; }
+        public string? ParentName_Surname { get; set; }
+        public string? ParentPhoneNumber { get; set; }
+        public ICollection<EventParticipant>? Events { get; set; }
+        public ICollection<Permission>? Permissions { get; set; }
+        public ICollection<Suggestion_Complaint>? Suggestions_Complaints { get; set; }
+        public ICollection<PaymentRecord>? PaymentRecords { get; set; }
+        public int? RoomId { get; set; }
+        public Room? Room { get; set; }
+        public int? PermissionRights { get; set; }
+        public string? School { get; set; }
         public string? Department { get; set; }
+        public int ConfirmCode { get; set; }
     }
 }

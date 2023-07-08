@@ -1,4 +1,5 @@
 ﻿using DTOs.AuthenticationDTOs;
+using Entities.Concrete;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -13,6 +14,7 @@ namespace Services.Abstract
     {
         Task<bool> LoginAsync(LoginDTO loginDTO, string role);
         public Task LogoutAsync();
-        TokenDTO CreateToken(IConfiguration _configuration, int minute);
+        TokenDTO CreateToken(IConfiguration _configuration, int minute, string role, string username);
+        public Task<bool> ChangePasswordAsync(ChangePasswordDTO changePasswordDTO, AppUser user);
     }
 }

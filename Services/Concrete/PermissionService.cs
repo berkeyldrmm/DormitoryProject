@@ -29,7 +29,7 @@ namespace Services.Concrete
             await _permissionRepository.AddRangeAsync(entity);
         }
 
-        public bool Delete(Permission entity)
+        public bool DeleteAsync(Permission entity)
         {
             return _permissionRepository.Delete(entity);
         }

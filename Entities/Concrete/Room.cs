@@ -8,6 +8,10 @@ namespace Entities.Concrete
 {
     public class Room
     {
+        public Room()
+        {
+            Students = new HashSet<AppUser>();
+        }
         public int Id { get; set; }
         public int RoomNo { get; set; }
         public int Quota { get; set; }

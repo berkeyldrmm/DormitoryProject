@@ -17,7 +17,8 @@ namespace DormitoryProjectAPI.Extensions
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IRoomService, RoomService>();
             services.AddScoped<ISuggestion_ComplaintService, Suggestion_ComplaintService>();
-            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             
             services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();

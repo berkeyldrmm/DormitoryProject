@@ -4,6 +4,7 @@ using DataAccess.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20230701002821_role-adding2")]
+    partial class roleadding2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,6 +44,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -77,6 +80,14 @@ namespace DataAccess.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 4,
+                            ConcurrencyStamp = "537f81f5-516a-4869-871e-3e09e0526148",
+                            Name = "Admin"
+                        });
                 });
 
             modelBuilder.Entity("Entities.Concrete.AppUser", b =>
@@ -93,9 +104,6 @@ namespace DataAccess.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ConfirmCode")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -150,6 +158,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int?>("RoomId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("School")
@@ -204,6 +213,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1645,16 +1655,16 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Subject")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Suggestion_ComplanintId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("Suggestion_ComplanintId");
 
                     b.ToTable("Suggestions_Complaints");
                 });
@@ -1766,7 +1776,9 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("Entities.Concrete.Room", "Room")
                         .WithMany("Students")
-                        .HasForeignKey("RoomId");
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Room");
                 });
@@ -1824,7 +1836,7 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("Entities.Concrete.AppUser", "Complainant_Recommender")
                         .WithMany("Suggestions_Complaints")
-                        .HasForeignKey("StudentId")
+                        .HasForeignKey("Suggestion_ComplanintId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

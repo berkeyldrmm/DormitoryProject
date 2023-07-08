@@ -1,6 +1,7 @@
 ﻿using DataAccess.Abstract;
 using DataAccess.Repositories;
 using Entities.Concrete;
+using Microsoft.AspNetCore.Identity;
 using Services.Abstract;
 using System;
 using System.Collections.Generic;
@@ -14,15 +15,18 @@ namespace Services.Concrete
     public class RoleService : IRoleService
     {
         private readonly IRoleRepository _roleRepository;
+        private readonly RoleManager<AppRole> _roleManager;
 
-        public RoleService(IRoleRepository roleRepository)
+        public RoleService(IRoleRepository roleRepository, RoleManager<AppRole> roleManager)
         {
             _roleRepository = roleRepository;
+            _roleManager = roleManager;
         }
-
-        public async Task<bool> Create(AppRole entity)
+        
+        public async Task<bool> CreateRoleAsync(AppRole entity)
         {
-            return await _roleRepository.AddAsync(entity);
+            var result= await _roleManager.CreateAsync(entity);
+            return result.Succeeded;
         }
 
         public async Task CreateRange(IEnumerable<AppRole> entity)
@@ -30,9 +34,10 @@ namespace Services.Concrete
             await _roleRepository.AddRangeAsync(entity);
         }
 
-        public bool Delete(AppRole entity)
+        public async Task<bool> DeleteRoleAsync(AppRole entity)
         {
-            return _roleRepository.Delete(entity);
+            var result= await _roleManager.DeleteAsync(entity);
+            return result.Succeeded;
         }
 
         public void DeleteRange(IEnumerable<AppRole> entity)
@@ -40,29 +45,30 @@ namespace Services.Concrete
             _roleRepository.DeleteRange(entity);
         }
 
-        public IEnumerable<AppRole> GetAll()
+        public IEnumerable<AppRole> GetRoles()
         {
-            return _roleRepository.GetAll().ToList();
+            return _roleManager.Roles.ToList();
         }
 
-        public IEnumerable<AppRole> GetByCondition(Expression<Func<AppRole, bool>> expression)
+        public IEnumerable<AppRole> GetRoleByCondition(Expression<Func<AppRole, bool>> expression)
         {
-            return _roleRepository.GetByCondition(expression).ToList();
+            return _roleManager.Roles.Where(expression).ToList();
         }
 
-        public async Task<AppRole> GetOne(int id)
+        public async Task<AppRole> GetOneRole(int id)
         {
-            return await _roleRepository.GetOneById(id);
+            return await _roleManager.FindByIdAsync(id.ToString());
         }
 
-        public bool Update(AppRole entity)
+        public async Task<bool> UpdateAsync(AppRole role)
         {
-            return _roleRepository.Update(entity);
+            var result= await _roleManager.UpdateAsync(role);
+            return result.Succeeded;
         }
 
-        public void UpdateRange(IEnumerable<AppRole> entity)
+        public void UpdateRange(IEnumerable<AppRole> role)
         {
-            _roleRepository.UpdateRange(entity);
+            _roleRepository.UpdateRange(role);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Services.Abstract
         Task CreateRange(IEnumerable<T> entity);
         bool Update(T entity);
         void UpdateRange(IEnumerable<T> entity);
-        bool Delete(T entity);
+        bool DeleteAsync(T entity);
         void DeleteRange(IEnumerable<T> entity);
 
     }

@@ -29,7 +29,7 @@ namespace Services.Concrete
             await _announcementRepository.AddRangeAsync(entity);
         }
 
-        public bool Delete(Announcement entity)
+        public bool DeleteAsync(Announcement entity)
         {
             return _announcementRepository.Delete(entity);
         }

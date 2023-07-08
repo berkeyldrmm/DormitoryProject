@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20230628224733_roles-data-seeding")]
-    partial class rolesdataseeding
+    [Migration("20230707152001_image-url-nullable")]
+    partial class imageurlnullable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -44,7 +44,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -80,20 +79,6 @@ namespace DataAccess.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ConcurrencyStamp = "22242245-a16c-4bc3-ab22-e083cfca130d",
-                            Name = "Öğrenci"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ConcurrencyStamp = "d2e44492-fac3-4d10-8808-76d987efb1ad",
-                            Name = "Admin"
-                        });
                 });
 
             modelBuilder.Entity("Entities.Concrete.AppUser", b =>
@@ -146,17 +131,15 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("ParentName_Surname")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ParentPhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PermissionRights")
+                    b.Property<int?>("PermissionRights")
                         .HasColumnType("int");
 
                     b.Property<string>("PhoneNumber")
@@ -165,11 +148,10 @@ namespace DataAccess.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("RoomId")
+                    b.Property<int?>("RoomId")
                         .HasColumnType("int");
 
                     b.Property<string>("School")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
@@ -221,7 +203,6 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1784,9 +1765,7 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("Entities.Concrete.Room", "Room")
                         .WithMany("Students")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoomId");
 
                     b.Navigation("Room");
                 });

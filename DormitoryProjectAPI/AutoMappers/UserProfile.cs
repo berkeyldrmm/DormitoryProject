@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DTOs.AuthenticationDTOs;
+using DTOs.UpdateDTOs;
 using Entities.Concrete;
 
 namespace DormitoryProjectAPI.AutoMappers
@@ -8,7 +9,9 @@ namespace DormitoryProjectAPI.AutoMappers
     {
         public UserProfile()
         {
-            CreateMap<UserDTO, AppUser>();
+            CreateMap<StudentDTO, AppUser>();
+            CreateMap<AdminDTO, AppUser>();
+            //CreateMap<StudentUpdateDTO, AppUser>();
         }
     }
 }

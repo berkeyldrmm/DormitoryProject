@@ -4,19 +4,21 @@
 
 namespace DataAccess.Migrations
 {
-    public partial class rolesdataseeding : Migration
+    public partial class roleadding3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.InsertData(
+            migrationBuilder.UpdateData(
                 table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 1, "22242245-a16c-4bc3-ab22-e083cfca130d", "Öğrenci", null });
+                keyColumn: "Id",
+                keyValue: 4,
+                column: "ConcurrencyStamp",
+                value: "51065fbc-6182-4af6-92cc-3d12cbf13a57");
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { 2, "d2e44492-fac3-4d10-8808-76d987efb1ad", "Admin", null });
+                values: new object[] { 1, "dcd2b9a6-3300-47fa-a0b0-519e799520b6", "Ogrenci", null });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -26,10 +28,12 @@ namespace DataAccess.Migrations
                 keyColumn: "Id",
                 keyValue: 1);
 
-            migrationBuilder.DeleteData(
+            migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: 2);
+                keyValue: 4,
+                column: "ConcurrencyStamp",
+                value: "537f81f5-516a-4869-871e-3e09e0526148");
         }
     }
 }

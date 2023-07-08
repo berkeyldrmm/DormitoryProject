@@ -4,6 +4,7 @@ using DataAccess.Concrete;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20230707173730_confirmcode")]
+    partial class confirmcode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1645,16 +1647,16 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Subject")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Suggestion_ComplanintId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("Suggestion_ComplanintId");
 
                     b.ToTable("Suggestions_Complaints");
                 });
@@ -1824,7 +1826,7 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("Entities.Concrete.AppUser", "Complainant_Recommender")
                         .WithMany("Suggestions_Complaints")
-                        .HasForeignKey("StudentId")
+                        .HasForeignKey("Suggestion_ComplanintId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
