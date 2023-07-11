@@ -20,7 +20,8 @@ namespace DormitoryProjectAPI.Extensions
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
-            
+            services.AddScoped<IPayementService, PaymentService>();
+
             services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
             services.AddScoped<IEventParticipantRepository, EventParticipantRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
@@ -29,7 +30,8 @@ namespace DormitoryProjectAPI.Extensions
             services.AddScoped<IRoomRepository, RoomRepository>();
             services.AddScoped<ISuggestion_ComplaintRepository, Suggestion_ComplaintRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }

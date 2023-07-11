@@ -10,9 +10,9 @@ namespace Entities.Concrete
     {
         public int Id { get; set; }
         public int StudentId { get; set; }
-        public AppUser Student { get; set; }
+        public AppUser? Student { get; set; }
         public int MonthId { get; set; }
-        public MonthsForPay Month { get; set; }
+        public MonthsForPay? Month { get; set; }
         public DateTime Date { get; set; }
     }
 }

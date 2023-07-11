@@ -11,5 +11,6 @@ namespace DataAccess.Abstract
     {
         IQueryable<AppUser> GetUsersByRole(string role);
         public IQueryable<AppUser> GetUsersWithSuggestions();
+        public IQueryable<AppUser> GetStudentsWithPermissions();
     }
 }

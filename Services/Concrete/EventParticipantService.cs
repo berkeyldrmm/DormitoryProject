@@ -65,5 +65,7 @@ namespace Services.Concrete
         {
             _eventParticipantRepository.UpdateRange(entity);
         }
+        
+        
     }
 }

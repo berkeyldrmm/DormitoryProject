@@ -9,5 +9,8 @@ namespace DataAccess.Abstract
 {
     public interface IEventParticipantRepository : IGenericRepository<EventParticipant>
     {
+        public IQueryable<EventParticipant> Join { get; }
+        public IQueryable<EventParticipant> GetEventsOfStudent(int id);
+        public IQueryable<EventParticipant> GetStudentsOfEvent(int id);
     }
 }

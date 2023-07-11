@@ -16,9 +16,11 @@ namespace Services.Abstract
         public IEnumerable<AppUser> GetStudents();
         public Task<bool> CreateStudent(StudentDTO userDto);
         public AppUser UpdateUser(AppUser student, StudentUpdateDTO studentDTO);
-        public Task AddSuggestionsToStudentAsync(Suggestion_Complaint suggestion);
         public IEnumerable<AppUser> GetStudentsWithSuggestions();
-        public IEnumerable<AppUser> GetStudentWithSuggestions(int id);
-        public Task<bool> AddPermissionsToStudentAsync(Permission permission);
+        public AppUser GetStudentWithSuggestions(int id);
+        public IEnumerable<AppUser> GetStudentsWithPermissions();
+        public AppUser GetStudentWithPermissions(int id);
+        public IEnumerable<EventParticipant> GetStudentsOfEvent(int id);
+        public void AddStudentToEvent(Event _event, EventParticipant eventParticipant);
     }
 }

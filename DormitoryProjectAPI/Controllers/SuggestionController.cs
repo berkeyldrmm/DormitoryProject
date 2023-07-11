@@ -1,5 +1,4 @@
 ﻿using DataAccess.Abstract;
-using DTOs.Suggestion_ComplaintsDTOs;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -57,6 +56,26 @@ namespace DormitoryProjectAPI.Controllers
             }
         }
 
+        [Route("getsuggestionsofstudent/{id:int}")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetSuggestionOfStudent(int id)
+        {
+            try
+            {
+                var suggestions = _suggestionService.GetSuggestionsOfStudent(id);
+                if (suggestions is null)
+                {
+                    return NotFound();
+                }
+                return Ok(suggestions);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Bir hata oluştu.");
+            }
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> AddSuggestion(Suggestion_Complaint suggestion)
@@ -66,7 +85,7 @@ namespace DormitoryProjectAPI.Controllers
                 var result = await _suggestionService.Create(suggestion);
                 if (result)
                 {
-                    await _studentService.AddSuggestionsToStudentAsync(suggestion);
+                    await _suggestionService.AddSuggestionsToStudentAsync(suggestion);
                     await _unitOfWork.Save();
                     return Ok();
                 }

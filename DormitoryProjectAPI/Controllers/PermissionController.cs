@@ -56,6 +56,26 @@ namespace DormitoryProjectAPI.Controllers
             }
         }
 
+        [Route("getpermissionsofstudent/{id:int}")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetPermissionsOfStudent(int id)
+        {
+            try
+            {
+                var permissions = _permissionService.GetPermissionsOfStudent(id);
+                if (permissions is null)
+                {
+                    return NotFound();
+                }
+                return Ok(permissions);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Bir hata oluştu.");
+            }
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> AddPermission(Permission permission)
@@ -67,7 +87,7 @@ namespace DormitoryProjectAPI.Controllers
                     var result = await _permissionService.Create(permission);
                     if (result)
                     {
-                        var result3=await _studentService.AddPermissionsToStudentAsync(permission);
+                        var result3=await _permissionService.AddPermissionsToStudentAsync(permission);
                         if (result3)
                         {
                             var result4 = await _unitOfWork.Save();

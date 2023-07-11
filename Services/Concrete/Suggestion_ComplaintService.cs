@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using DataAccess.Abstract;
 using DataAccess.Repositories;
-using DTOs.Suggestion_ComplaintsDTOs;
 using Entities.Concrete;
+using Microsoft.AspNetCore.Identity;
 using Services.Abstract;
 using System;
 using System.Collections.Generic;
@@ -17,10 +17,14 @@ namespace Services.Concrete
     {
         private readonly ISuggestion_ComplaintRepository _suggestionComplaintRepository;
         private readonly IMapper _mapper;
-        public Suggestion_ComplaintService(ISuggestion_ComplaintRepository suggestionComplaintRepository, IMapper mapper)
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IStudentService _studentService;
+        public Suggestion_ComplaintService(ISuggestion_ComplaintRepository suggestionComplaintRepository, IMapper mapper, UserManager<AppUser> userManager, IStudentService studentService)
         {
             _suggestionComplaintRepository = suggestionComplaintRepository;
             _mapper = mapper;
+            _userManager = userManager;
+            _studentService = studentService;
         }
         public async Task<bool> Create(Suggestion_Complaint entity)
         {
@@ -66,6 +70,22 @@ namespace Services.Concrete
         public void UpdateRange(IEnumerable<Suggestion_Complaint> entity)
         {
             _suggestionComplaintRepository.UpdateRange(entity);
+        }
+
+        public async Task AddSuggestionsToStudentAsync(Suggestion_Complaint suggestion)
+        {
+            AppUser user = await _userManager.FindByIdAsync(suggestion.StudentId.ToString());
+            user.Suggestions_Complaints.Add(suggestion);
+            await _userManager.UpdateAsync(user);
+        }
+        public IEnumerable<Suggestion_Complaint> GetSuggestionsOfStudent(int id)
+        {
+            var student=_studentService.GetStudentWithSuggestions(id);
+            if(student is null)
+            {
+                throw new DirectoryNotFoundException("Öğrenci kaydı bulunamadı.");
+            }
+            return student.Suggestions_Complaints;
         }
     }
 }

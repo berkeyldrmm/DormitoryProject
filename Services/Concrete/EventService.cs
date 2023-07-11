@@ -14,9 +14,13 @@ namespace Services.Concrete
     public class EventService : IEventService
     {
         private readonly IEventRepository _eventRepository;
-        public EventService(IEventRepository eventRepository)
+        private readonly IEventParticipantRepository _eventParticipantRepository;
+        private readonly IStudentService _studentService;
+        public EventService(IEventRepository eventRepository, IStudentService studentService, IEventParticipantRepository eventParticipantRepository)
         {
             _eventRepository = eventRepository;
+            _studentService = studentService;
+            _eventParticipantRepository = eventParticipantRepository;
         }
         public async Task<bool> Create(Event entity)
         {
@@ -61,6 +65,12 @@ namespace Services.Concrete
         public void UpdateRange(IEnumerable<Event> entity)
         {
             _eventRepository.UpdateRange(entity);
+        }
+        
+
+        public IEnumerable<EventParticipant> GetEventsOfStudent(int id)
+        {
+            return _eventParticipantRepository.GetEventsOfStudent(id);
         }
     }
 }

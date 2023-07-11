@@ -19,13 +19,15 @@ namespace DormitoryProjectAPI.Controllers
         private readonly IStudentService _studentService;
         private readonly UserManager<AppUser> _userManager;
         private readonly IRoomService _roomService;
+        private readonly IEventService _eventService;
         private readonly IUnitOfWork _unitOfWork;
-        public StudentController(IStudentService userService, UserManager<AppUser> userManager, IRoomService roomService, IUnitOfWork unitOfWork)
+        public StudentController(IStudentService userService, UserManager<AppUser> userManager, IRoomService roomService, IUnitOfWork unitOfWork, IEventService eventService)
         {
             _studentService = userService;
             _userManager = userManager;
             _roomService = roomService;
             _unitOfWork = unitOfWork;
+            _eventService = eventService;
         }
 
         [HttpGet]
@@ -206,6 +208,7 @@ namespace DormitoryProjectAPI.Controllers
 
         [Route("getstudentswithsuggestions")]
         [HttpGet]
+        [Authorize(Policy = "Admin")]
         public IActionResult GetStudentsWithSuggestions()
         {
             var students=_studentService.GetStudentsWithSuggestions();
@@ -214,10 +217,48 @@ namespace DormitoryProjectAPI.Controllers
 
         [Route("getstudentwithsuggestions/{StudentId:int}")]
         [HttpGet]
+        [Authorize]
         public IActionResult GetStudentWithSuggestions(int StudentId)
         {
             var student = _studentService.GetStudentWithSuggestions(StudentId);
             return Ok(student);
+        }
+
+        [Route("getstudentswithpermissions")]
+        [HttpGet]
+        [Authorize(Policy = "Admin")]
+        public IActionResult GetStudentsWithPermissions()
+        {
+            var students = _studentService.GetStudentsWithPermissions();
+            return Ok(students);
+        }
+
+        [Route("getstudentwithpermissions/{StudentId:int}")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetStudentWithPermissions(int StudentId)
+        {
+            var student = _studentService.GetStudentWithPermissions(StudentId);
+            return Ok(student);
+        }
+
+
+        [Route("getparticipantsofevent/{id:int}")]
+        [HttpGet]
+        [Authorize(Policy = "Admin")]
+        public IActionResult GetEventParticipants(int id)
+        {
+            var participants = _studentService.GetStudentsOfEvent(id);
+            if(participants is null)
+            {
+                return NotFound();
+            }
+            List<AppUser> students = new List<AppUser>();
+            foreach (var participant in participants)
+            {
+                students.Add(participant.Student);
+            }
+            return Ok(students);
         }
     }
 }

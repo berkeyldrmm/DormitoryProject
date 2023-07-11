@@ -9,5 +9,6 @@ namespace Services.Abstract
 {
     public interface IEventService : IGenericService<Event>
     {
+        public IEnumerable<EventParticipant> GetEventsOfStudent(int id);
     }
 }

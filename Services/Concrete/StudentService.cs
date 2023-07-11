@@ -5,6 +5,7 @@ using DTOs.AuthenticationDTOs;
 using DTOs.UpdateDTOs;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Services.Abstract;
@@ -20,14 +21,16 @@ namespace Services.Concrete
     public class StudentService : IStudentService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IEventParticipantRepository _eventParticipantRepository;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
 
-        public StudentService(IUserRepository userRepository, IMapper mapper, UserManager<AppUser> userManager)
+        public StudentService(IUserRepository userRepository, IMapper mapper, UserManager<AppUser> userManager, IEventParticipantRepository eventParticipantRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _userManager = userManager;
+            _eventParticipantRepository = eventParticipantRepository;
         }
 
         public async Task<bool> CreateStudent(StudentDTO userDto)
@@ -71,37 +74,40 @@ namespace Services.Concrete
             return student;
         }
 
-        public async Task AddSuggestionsToStudentAsync(Suggestion_Complaint suggestion)
-        {
-            AppUser user = await _userManager.FindByIdAsync(suggestion.StudentId.ToString());
-            user.Suggestions_Complaints.Add(suggestion);
-            await _userManager.UpdateAsync(user);
-        }
-
+        
         public IEnumerable<AppUser> GetStudentsWithSuggestions()
         {
             return _userRepository.GetUsersWithSuggestions().ToList();
         }
-        public IEnumerable<AppUser> GetStudentWithSuggestions(int id)
+        public AppUser GetStudentWithSuggestions(int id)
         {
-            return _userRepository.GetUsersWithSuggestions().Where(s=>s.Id==id).ToList();
+            return _userRepository.GetUsersWithSuggestions().SingleOrDefault(s => s.Id == id);
         }
-        public async Task<bool> AddPermissionsToStudentAsync(Permission permission)
+        
+
+        public IEnumerable<AppUser> GetStudentsWithPermissions()
         {
-            var student=await _userManager.FindByIdAsync(permission.StudentId.ToString());
-            if(student is null)
+            return _userRepository.GetStudentsWithPermissions().ToList();
+        }
+        public AppUser GetStudentWithPermissions(int id)
+        {
+            return _userRepository.GetStudentsWithPermissions().SingleOrDefault(s => s.Id == id);
+        }
+
+        public IEnumerable<EventParticipant> GetStudentsOfEvent(int id)
+        {
+            return _eventParticipantRepository.GetStudentsOfEvent(id).ToList();
+        }
+
+        public void AddStudentToEvent(Event _event, EventParticipant eventParticipant)
+        {
+            var b = _event.Students.Contains(eventParticipant);
+            if (!_event.Students.Contains(eventParticipant))
             {
-                throw new DirectoryNotFoundException("Öğrenci bulunamadı.");
+                _event.Students.Add(eventParticipant);
             }
-            student.Permissions.Add(permission);
-            TimeSpan span= permission.DateOfEnd.Subtract(permission.DateOfStart);
-            if (student.PermissionRights > span.Days)
-            {
-                student.PermissionRights -= span.Days;
-                var result=await _userManager.UpdateAsync(student);
-                return result.Succeeded;
-            }
-            throw new Exception("Yeteri kadar izin hakkınız bulunmamaktadır.");
+                
+            throw new Exception("Bu öğrenci, bu etkinliğe zaten kayıtlı.");
         }
     }
 }

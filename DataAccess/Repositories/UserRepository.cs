@@ -48,5 +48,10 @@ namespace DataAccess.Repositories
         {
             return GetUsersByRole("Student").Include(s=>s.Suggestions_Complaints).AsQueryable();
         }
+
+        public IQueryable<AppUser> GetStudentsWithPermissions()
+        {
+            return GetUsersByRole("Student").Include(s => s.Permissions).AsQueryable();
+        }
     }
 }

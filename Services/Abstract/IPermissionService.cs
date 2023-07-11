@@ -9,5 +9,7 @@ namespace Services.Abstract
 {
     public interface IPermissionService : IGenericService<Permission>
     {
+        public Task<bool> AddPermissionsToStudentAsync(Permission permission);
+        public IEnumerable<Permission> GetPermissionsOfStudent(int id);
     }
 }

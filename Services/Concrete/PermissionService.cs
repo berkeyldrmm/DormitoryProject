@@ -1,6 +1,7 @@
 ﻿using DataAccess.Abstract;
 using DataAccess.Repositories;
 using Entities.Concrete;
+using Microsoft.AspNetCore.Identity;
 using Services.Abstract;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,14 @@ namespace Services.Concrete
     public class PermissionService : IPermissionService
     {
         private readonly IPermissionRepository _permissionRepository;
+        private readonly IStudentService _studentService;
+        private readonly UserManager<AppUser> _userManager;
 
-        public PermissionService(IPermissionRepository permissionRepository)
+        public PermissionService(IPermissionRepository permissionRepository, UserManager<AppUser> userManager, IStudentService studentService)
         {
             _permissionRepository = permissionRepository;
+            _userManager = userManager;
+            _studentService = studentService;
         }
         public async Task<bool> Create(Permission entity)
         {
@@ -69,6 +74,34 @@ namespace Services.Concrete
         public void UpdateRange(IEnumerable<Permission> entity)
         {
             _permissionRepository.UpdateRange(entity);
+        }
+
+        public async Task<bool> AddPermissionsToStudentAsync(Permission permission)
+        {
+            var student = await _userManager.FindByIdAsync(permission.StudentId.ToString());
+            if (student is null)
+            {
+                throw new DirectoryNotFoundException("Öğrenci bulunamadı.");
+            }
+            student.Permissions.Add(permission);
+            TimeSpan span = permission.DateOfEnd.Subtract(permission.DateOfStart);
+            if (student.PermissionRights > span.Days)
+            {
+                student.PermissionRights -= span.Days;
+                var result = await _userManager.UpdateAsync(student);
+                return result.Succeeded;
+            }
+            throw new Exception("Yeteri kadar izin hakkınız bulunmamaktadır.");
+        }
+
+        public IEnumerable<Permission> GetPermissionsOfStudent(int id)
+        {
+            var student = _studentService.GetStudentWithPermissions(id);
+            if (student is null)
+            {
+                throw new DirectoryNotFoundException("Öğrenci kaydı bulunamadı.");
+            }
+            return student.Permissions;
         }
     }
 }
